@@ -1,0 +1,85 @@
+<!doctype html>
+<html>
+  <head>
+    <title>Socket.IO</title>
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+	<meta name="apple-mobile-web-app-capable" content="yes" />
+	<meta name="apple-mobile-web-app-status-bar-style" content="black" />
+  </head>
+  <body>
+    <h1>Device 1</h1>
+	<hr/>
+	<div>
+		<button id="io1-3-off" type="button">D3 On</button>
+		<button id="io1-3-on" type="button">D3 Off</button>
+	</div>
+	<br/>
+	<div>
+		<button id="io1-4-off" type="button">D4 On</button>
+		<button id="io1-4-on" type="button">D4 Off</button>  
+    </div>
+    <h1>Device 2</h1>
+	<hr/>
+	<div>
+		<button id="io2-3-off" type="button">D3 On</button>
+		<button id="io2-3-on" type="button">D3 Off</button>
+	</div>
+	<br/>
+	<div>
+		<button id="io2-4-off" type="button">D4 On</button>
+		<button id="io2-4-on" type="button">D4 Off</button>  
+    </div>
+    <script src="http://code.jquery.com/jquery-1.11.1.js"></script>
+    <script>
+		$("#io1-3-off").click(function(){
+			$.ajax({url: "http://192.168.1.40/write/3/1", success: function(result){
+				console.log(result);
+				$("#div1").html(result);
+			}});
+		});
+		$("#io1-3-on").click(function(){
+			$.ajax({url: "http://192.168.1.40/write/3/0", success: function(result){
+				console.log(result);
+				$("#div1").html(result);
+			}});
+		});
+		$("#io1-4-off").click(function(){
+			$.ajax({url: "http://192.168.1.40/write/4/1", success: function(result){
+				console.log(result);
+				$("#div1").html(result);
+			}});
+		});
+		$("#io1-4-on").click(function(){
+			$.ajax({url: "http://192.168.1.40/write/4/0", success: function(result){
+				console.log(result);
+				$("#div1").html(result);
+			}});
+		});		
+		
+		$("#io2-3-off").click(function(){
+			$.ajax({url: "http://192.168.1.38/write/3/1", success: function(result){
+				console.log(result);
+				$("#div1").html(result);
+			}});
+		});
+		$("#io2-3-on").click(function(){
+			$.ajax({url: "http://192.168.1.38/write/3/0", success: function(result){
+				console.log(result);
+				$("#div1").html(result);
+			}});
+		});
+		$("#io2-4-off").click(function(){
+			$.ajax({url: "http://192.168.1.38/write/4/1", success: function(result){
+				console.log(result);
+				$("#div1").html(result);
+			}});
+		});
+		$("#io2-4-on").click(function(){
+			$.ajax({url: "http://192.168.1.38/write/4/0", success: function(result){
+				console.log(result);
+				$("#div1").html(result);
+			}});
+		});	
+    </script>
+  </body>
+</html>
