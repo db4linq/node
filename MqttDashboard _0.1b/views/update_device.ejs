@@ -1,0 +1,150 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+    <meta charset="utf-8">
+    <title>Bootstrap Login Form</title>
+    <meta name="generator" content="Bootply" />
+    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <link href="/stylesheets/bootstrap.min.css" rel="stylesheet">
+    <!--[if lt IE 9]>
+    <script src="//html5shim.googlecode.com/svn/trunk/html5.js"></script>
+    <![endif]-->
+    <link href="/stylesheets/style.css" rel="stylesheet">
+</head>
+<body>
+<div class="container">
+    <div class="row centered-form">
+        <div class="col-xs-12 col-sm-8 col-md-8 col-sm-offset-2 col-md-offset-2">
+            <div class="panel panel-default">
+                <div class="panel-heading">
+                    <h3 class="panel-title"><%= title %></h3>
+                </div>
+                <div class="panel-body">
+                    <form role="form" action='/device/update' method='POST'>
+                        <% if (device) { %>
+                        <input type="hidden" name="_id" value="<%= device._id %>">
+                        <% } %>
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="device_id" class="control-label">Device ID</label>
+                                    <input type="text" name="device_id"
+                                           id="device_id"
+                                            <% if (device) { %>
+                                           value="<%= device.deviceid %>"
+                                            <% } %>
+                                           class="form-control input-sm"
+                                           placeholder="Device ID"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <label for="subscribe" class="control-label">Subscribe Topic</label>
+                                    <input type="text" name="subscribe"
+                                           id="subscribe"
+                                            <% if (device) { %>
+                                           value="<%= device.subscribe %>"
+                                            <% } %>
+                                           class="form-control input-sm"
+                                           placeholder="Subscribe Topic"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <label for="title" class="control-label">Title</label>
+                                    <input type="text" name="title"
+                                           id="title"
+                                            <% if (device) { %>
+                                           value="<%= device.title %>"
+                                            <% } %>
+                                           class="form-control input-sm"
+                                           placeholder="Title"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-xs-12 col-sm-12 col-md-12">
+                                <div class="form-group">
+                                    <label for="description" class="control-label">Description</label>
+                                    <input type="text" name="description"
+                                           id="description"
+                                            <% if (device) { %>
+                                           value="<%= device.description %>"
+                                            <% } %>
+                                           class="form-control input-sm"
+                                           placeholder="Description"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="unit" class="control-label">Unit</label>
+                                    <input type="text" name="unit"
+                                           id="unit"
+                                            <% if (device) { %>
+                                           value="<%= device.unit %>"
+                                            <% } %>
+                                           class="form-control input-sm"
+                                           placeholder="Unit"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+
+
+                        <div class="row">
+                            <div class="col-xs-6 col-sm-6 col-md-6">
+                                <div class="form-group">
+                                    <label for="field" class="control-label">Data Field</label>
+                                    <input type="text" name="field"
+                                           id="field"
+                                            <% if (device) { %>
+                                           value="<%= device.field %>"
+                                            <% } %>
+                                           class="form-control input-sm"
+                                           placeholder="Data Field"
+                                           required>
+                                </div>
+                            </div>
+                        </div>
+                        <hr/>
+                        <div class="row">
+                            <div class="col-xs-4 col-sm-4 col-md-6">
+
+                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-3">
+                                <input type="submit" value="Save" class="btn btn-success btn-block">
+                            </div>
+                            <div class="col-xs-4 col-sm-4 col-md-3">
+                                <a href="/" class="btn btn-danger btn-block">Cancel</a>
+                            </div>
+                        </div>
+
+
+                    </form>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- script references -->
+<script src="/javascripts/jquery-2.1.4.min.js"></script>
+<script src="/javascripts/bootstrap.min.js"></script>
+</body>
+</html>

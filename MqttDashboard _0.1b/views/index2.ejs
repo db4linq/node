@@ -1,0 +1,163 @@
+
+<!doctype html>
+
+<html>
+<head>
+    <title><%= title %></title>
+    <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+    <meta name="apple-mobile-web-app-capable" content="yes" />
+    <meta name="apple-mobile-web-app-status-bar-style" content="black" />
+    <style>
+        body {
+            text-align: center;
+        }
+
+        #g1, #g2 {
+            width:300px; height:220px;
+            display: inline-block;
+            margin: 1em;
+
+        }
+        #g1-trmp, #g2-humi{
+            display: inline-block;
+            margin: 1em;
+        }
+        .status {
+            display: inline-block;
+        }
+
+
+        p {
+            display: block;
+            width: 450px;
+            margin: 2em auto;
+            text-align: left;
+        }
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            -moz-box-sizing:border-box;
+            -webkit-box-sizing:border-box;
+        }
+    </style>
+    <link href="/javascripts/morrisjs/morris.css" rel="stylesheet">
+    <script src="/javascripts/socket.io.js"></script>
+    <script src="/javascripts/jquery-2.1.4.min.js"></script>
+    <script src="/javascripts/raphael.2.1.0.min.js"></script>
+    <script src="/javascripts/justgage.1.0.1.min.js"></script>
+    <script src="/javascripts/morrisjs/morris.min.js"></script>
+    <script>
+
+        var socket = io();
+
+        function formatDate(date) {
+            var hours = date.getHours();
+            var minutes = date.getMinutes();
+            var seccon = date.getSeconds();
+            hours = hours % 12;
+            hours = hours ? hours : 12; // the hour '0' should be '12'
+            minutes = minutes < 10 ? '0'+minutes : minutes;
+            seccon = seccon < 10 ? '0'+seccon : seccon;
+            var strTime = hours + ':' + minutes + ':' + seccon;
+            return date.getMonth()+1 + "/" + date.getDate() + "/" + date.getFullYear() + "  " + strTime;
+        }
+        window.onload = function(){
+            var g1 = new JustGage({
+                id: "g1",
+                value: 0,
+                min: 0,
+                max: 100,
+                title: "ชั้นล่าง-นอกบ้าน",
+                label: "องศา C"
+            });
+            var g2 = new JustGage({
+                id: "g2",
+                value: 0,
+                min: 0,
+                max: 100,
+                title: "ชั้นล่าง-นอกบ้าน",
+                label: "%"
+            });
+
+            g1.refresh(0);
+            g2.refresh(0);
+
+            socket.on('/<%= deviceid %>/temperature', function(msg){
+                //$('#messages').append($('<li>').text(msg));
+                var obj = jQuery.parseJSON( msg );
+
+                console.log(obj);
+                var tem = new Date();
+
+                g1.refresh(obj.Temperature);
+                g2.refresh(obj.Humidity);
+
+                if (temp_log1.length > 30){
+                    temp_log1.splice(0, 1);
+                }
+                temp_log1.push({timestamp: tem.getTime(), temp: obj.Temperature, humi: obj.Humidity});
+                graph1.setData(temp_log1);
+
+                if (humi_log1.length > 30){
+                    humi_log1.splice(0, 1);
+                }
+                humi_log1.push({timestamp: tem.getTime(), humi: obj.Humidity});
+
+                graph2.setData(humi_log1);
+
+            });
+
+            var temp_log1 = [];
+            var humi_log1 = [];
+
+            var graph1 = Morris.Line({
+                element: 'g1-trmp',
+                data: temp_log1,
+                xkey: 'timestamp',
+                ykeys: ['temp', 'humi'],
+                //postUnits: ' °c',
+                lineColors: ['#199cef', '#FF0000'],
+                goals: [30.0],
+                goalLineColors: ['#FF0000'],
+                labels: ['Temperature', 'Humidity'],
+                lineWidth: 3,
+                pointSize: 3,
+                resize: false
+            });
+
+            var graph2 = Morris.Line({
+                element: 'g2-humi',
+                data: temp_log1,
+                xkey: 'timestamp',
+                ykeys: ['humi'],
+                postUnits: ' %',
+                lineColors: ['#199cef'],
+                goals: [30.0],
+                goalLineColors: ['#FF0000'],
+                labels: ['Humidity'],
+                lineWidth: 3,
+                pointSize: 3,
+                resize: false
+            });
+        };
+    </script>
+
+</head>
+<body>
+<div>
+    <div><a href="/signout"><%= user.name %>
+    <div>
+        <div id="g1"></div>
+        <div id="g1-trmp" ></div>
+    </div>
+    <div>
+        <div id="g2"></div>
+        <div id="g2-humi" ></div>
+    </div>
+</div>
+<br/>
+
+</body>
+</html>

@@ -1,0 +1,191 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title><%= title %></title>
+
+    <!-- Bootstrap Core CSS -->
+    <link href="stylesheets/bootstrap.min.css" rel="stylesheet">
+
+    <!-- Custom CSS -->
+    <link href="stylesheets/sb-admin-2.css" rel="stylesheet">
+
+    <!-- Custom Fonts -->
+    <link href="font-awesome/css/font-awesome.min.css" rel="stylesheet" type="text/css">
+
+
+    <link href="metisMenu/dist/metisMenu.min.css" rel="stylesheet">
+
+    <link href="/javascripts/morrisjs/morris.css" rel="stylesheet">
+
+    <!-- jQuery -->
+    <script src="javascripts/jquery-2.1.4.min.js"></script>
+
+    <!-- Bootstrap Core JavaScript -->
+    <script src="javascripts/bootstrap.min.js"></script>
+
+    <script src="javascripts/bootbox.min.js"></script>
+
+
+    <script src="metisMenu/dist/metisMenu.min.js"></script>
+
+    <script src="javascripts/sb-admin-2.js"></script>
+
+    <script src="/javascripts/socket.io.js"></script>
+
+    <script src="/javascripts/raphael.2.1.0.min.js"></script>
+
+    <script src="/javascripts/justgage.1.0.1.min.js"></script>
+
+    <script src="/javascripts/morrisjs/morris.min.js"></script>
+
+    <!-- HTML5 Shim and Respond.js IE8 support of HTML5 elements and media queries -->
+    <!-- WARNING: Respond.js doesn't work if you view the page via file:// -->
+    <!--[if lt IE 9]>
+    <script src="https://oss.maxcdn.com/libs/html5shiv/3.7.0/html5shiv.js"></script>
+    <script src="https://oss.maxcdn.com/libs/respond.js/1.4.2/respond.min.js"></script>
+    <![endif]-->
+    <style>
+        .c-guage {
+            width: 100%; height: 100%;
+            display: inline-block;
+        }
+
+    </style>
+
+
+    <script>
+
+        function bootConfirm(txt){
+            bootbox.confirm(txt, function(result) {
+                return result;
+            });
+        }
+        var socket = io();
+        var data = []
+        var guages = {};
+
+        $(document).ready(function(){
+            <% if (user.devices) { %>
+            <% user.devices.forEach(function(rows) { %>
+            <% if (rows) { %>
+            <% rows.forEach(function(device) { %>
+            data.push({
+                id: "<%= device.deviceid %>",
+                subscribe: "<%= device.subscribe %>",
+                title: "<%= device.title %>",
+                label: "<%= device.unit %>"
+            }) ;
+
+            guages[<%= device.deviceid %>] = new JustGage({
+                id: "<%= device.deviceid %>",
+                value: 0,
+                min: 0,
+                max: 100,
+                title: "<%= device.title %>",
+                label: "<%= device.unit %>"
+            });
+            guages[<%= device.deviceid %>].refresh(0);
+            socket.on('<%= device.subscribe %>', function(msg){
+                var obj = jQuery.parseJSON( msg );
+                //console.log(obj);
+                guages[<%= device.deviceid %>].refresh(obj.<%= device.field %>);
+            });
+            <% }); %>
+            <% } %>
+            <% }); %>
+            <% } %>
+        });
+    </script>
+</head>
+
+<body>
+
+<div id="wrapper">
+
+    <% include navigation %>
+
+    <div id="page-wrapper">
+
+        <div class="container-fluid">
+            <div class="row">
+                <div class="col-lg-12">
+                    <h1 class="page-header"><%= title %></h1>
+                </div>
+            </div>
+            <!-- Page Heading -->
+            <% if (user.devices) { %>
+            <% user.devices.forEach(function(rows) { %>
+            <div class="row">
+                <% rows.forEach(function(device) { %>
+                <div class="col-lg-4 col-md-6">
+                    <div class="panel panel-green">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-line-chart fa-3x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge-small"><%= device.title %></div>
+                                    <div ><%= device.deviceid %></div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="#" class="text-align: center;">
+                            <div class="text-left" id="<%= device.deviceid %>"></div>
+                        </a>
+                        <div class="panel-footer text-right">
+                            <a onclick="return confirm('Are you sure?');" style="padding: 6px;" href="/device/delete/<%= device._id %>"><i class="fa fa-trash-o fa-2x"></i></a>
+                            <a style="padding: 6px;" href="/device/edit/<%= device._id %>"><i class="fa fa-pencil fa-2x"></i></a>
+                        </div>
+                    </div>
+                </div>
+                <% }); %>
+            </div>
+            <% }); %>
+            <% } %>
+            <!-- /.row -->
+            <!-- New device -->
+            <div class="row">
+                <div class="col-lg-4 col-md-6">
+                    <div class="panel panel-yellow">
+                        <div class="panel-heading">
+                            <div class="row">
+                                <div class="col-xs-3">
+                                    <i class="fa fa-plus fa-3x"></i>
+                                </div>
+                                <div class="col-xs-9 text-right">
+                                    <div class="huge-small">New</div>
+                                </div>
+                            </div>
+                        </div>
+                        <a href="/device/new">
+                            <div class="panel-footer">
+                                <span class="pull-left">Add new device</span>
+                                <span class="pull-right"><i class="fa fa-arrow-circle-right"></i></span>
+                                <div class="clearfix"></div>
+                            </div>
+                        </a>
+                    </div>
+                </div>
+            </div>
+
+        </div>
+        <!-- /.container-fluid -->
+
+    </div>
+    <!-- /#page-wrapper -->
+
+</div>
+<!-- /#wrapper -->
+
+</body>
+
+</html>
